@@ -1,4 +1,4 @@
-package web.config;
+package hiber.web.config;
 
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
