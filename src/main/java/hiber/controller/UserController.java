@@ -1,4 +1,4 @@
-package hiber.web.controller;
+package hiber.controller;
 
 import hiber.model.User;
 import hiber.service.UserService;
