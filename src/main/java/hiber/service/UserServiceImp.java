@@ -9,12 +9,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImp implements UserService {
 
    @Autowired
    private UserDao userDao;
 
-   @Transactional
    @Override
    public void add(User user) {
       userDao.add(user);
@@ -24,8 +24,6 @@ public class UserServiceImp implements UserService {
    @Override
    public List<User> listUsers() {
       List<User> users = userDao.listUsers();
-      for (User user : users)
-         System.out.println(user);
       return users;
    }
 

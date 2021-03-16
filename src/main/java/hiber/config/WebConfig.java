@@ -1,4 +1,4 @@
-package web.config;
+package hiber.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -21,7 +21,6 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver;
 import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 import java.util.Properties;
 
@@ -29,7 +28,7 @@ import java.util.Properties;
 @PropertySource("classpath:db.properties")
 @EnableTransactionManagement
 @EnableWebMvc
-@ComponentScan({"hiber", "web"})
+@ComponentScan("hiber")
 public class WebConfig implements WebMvcConfigurer {
 
     private final ApplicationContext applicationContext;
