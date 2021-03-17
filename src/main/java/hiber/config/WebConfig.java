@@ -75,7 +75,6 @@ public class WebConfig implements WebMvcConfigurer {
         Properties props=new Properties();
         props.put("hibernate.show_sql", env.getProperty("hibernate.show_sql"));
         props.put("hibernate.hbm2ddl.auto", env.getProperty("hibernate.hbm2ddl.auto"));
-        //props.put("hibernate.dialect", env.getProperty("hibernate.dialect"));
         return props;
     }
 
@@ -99,11 +98,11 @@ public class WebConfig implements WebMvcConfigurer {
         return transactionManager;
     }
 
-
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         ThymeleafViewResolver resolver = new ThymeleafViewResolver();
         resolver.setTemplateEngine(templateEngine());
+        resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
     }
 }
