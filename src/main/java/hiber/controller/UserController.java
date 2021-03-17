@@ -13,14 +13,14 @@ public class UserController {
 	@Autowired
 	private UserService userService;
 
-	@GetMapping(value = "/users")
+	@GetMapping(value = "/admin")
 	public String printWelcome(ModelMap model) {
 		model.addAttribute("users", userService.listUsers());
 		model.addAttribute("user", new User());
 		return "users";
 	}
 
-	@PostMapping(value = "/users")
+	@PostMapping(value = "/admin")
 	public String addUser(@ModelAttribute User user, Model model){
 		userService.add(user);
 		model.addAttribute("users", userService.listUsers());
@@ -29,19 +29,24 @@ public class UserController {
 
 	}
 
-	@PostMapping(value = "/users/modify")
+	@PostMapping(value = "/admin/modify")
 	public String modifyUser(@ModelAttribute User user, Model model){
 		userService.updateUser(user);
 		model.addAttribute("users", userService.listUsers());
-		return "redirect:/users";
+		return "redirect:/admin";
 
 	}
 
-	@PostMapping(value = "/users/delete")
+	@PostMapping(value = "/admin/delete")
 	public String deleteUser(@ModelAttribute User user, Model model){
 		userService.removeUser(user);
 		model.addAttribute("users", userService.listUsers());
-		return "redirect:/users";
+		return "redirect:/admin";
 	}
-	
+
+	@GetMapping(value = "/user")
+	public String printHello(ModelMap model) {
+		model.addAttribute("user", new User());
+		return "hello";
+	}
 }

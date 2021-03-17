@@ -1,27 +1,34 @@
 package hiber.model;
 
+import org.springframework.context.annotation.Primary;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class User implements UserDetails {
 
    @Id
    @GeneratedValue(strategy = GenerationType.IDENTITY)
-   @Column(name = "user_id")
    private Long id;
 
-   @Column(name = "name")
+   @Column(name = "login", nullable = false, unique = true)
+   private String loginName;
+   private String password;
    private String firstName;
-
-   @Column(name = "last_name")
    private String lastName;
-
-   @Column(name = "email")
    private String email;
 
-   @OneToMany
+   @ManyToMany(cascade = {CascadeType.ALL})
+   @JoinTable(
+           name = "user_roles",
+           joinColumns = { @JoinColumn(name = "user_id")},
+           inverseJoinColumns = { @JoinColumn(name = "role_id")}
+   )
    private Set<Role> roles;
 
    public User() {}
@@ -64,6 +71,18 @@ public class User {
       this.email = email;
    }
 
+   public void setLoginName(String loginName) {
+      this.loginName = loginName;
+   }
+
+   public void setPassword(String password) {
+      this.password = password;
+   }
+
+   public void setRoles(Set<Role> roles) {
+      this.roles = roles;
+   }
+
    @Override
    public String toString() {
       return "User{" +
@@ -72,5 +91,40 @@ public class User {
               ", lastName='" + lastName + '\'' +
               ", email='" + email + '\'' +
               '}';
+   }
+
+   @Override
+   public Collection<? extends GrantedAuthority> getAuthorities() {
+      return roles;
+   }
+
+   @Override
+   public String getPassword() {
+      return password;
+   }
+
+   @Override
+   public String getUsername() {
+      return loginName;
+   }
+
+   @Override
+   public boolean isAccountNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isAccountNonLocked() {
+      return true;
+   }
+
+   @Override
+   public boolean isCredentialsNonExpired() {
+      return true;
+   }
+
+   @Override
+   public boolean isEnabled() {
+      return true;
    }
 }
