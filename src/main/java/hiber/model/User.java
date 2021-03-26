@@ -1,6 +1,5 @@
 package hiber.model;
 
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -22,6 +21,10 @@ public class User implements UserDetails {
    private String firstName;
    private String lastName;
    private String email;
+   private boolean isEnabled;
+   private boolean isAccountNonExpired;
+   private boolean isAccountNonLocked;
+   private boolean isCredentialsNonExpired;
 
    @ManyToMany(cascade = {CascadeType.ALL})
    @JoinTable(
@@ -37,6 +40,14 @@ public class User implements UserDetails {
       this.firstName = firstName;
       this.lastName = lastName;
       this.email = email;
+   }
+
+   public User(UserDto userDto){
+      this.firstName = userDto.getFirstName();
+      this.lastName = userDto.getLastName();
+      this.loginName = userDto.getLoginName();
+      this.email = userDto.getEmail();
+      this.password = userDto.getPassword();
    }
 
    public Long getId() {
@@ -71,26 +82,37 @@ public class User implements UserDetails {
       this.email = email;
    }
 
+   public String getLoginName() {
+      return loginName;
+   }
+
    public void setLoginName(String loginName) {
       this.loginName = loginName;
+   }
+
+   @Override
+   public String getPassword() {
+      return password;
    }
 
    public void setPassword(String password) {
       this.password = password;
    }
 
+   public Set<Role> getRoles() {
+      return roles;
+   }
+
    public void setRoles(Set<Role> roles) {
       this.roles = roles;
    }
 
-   @Override
-   public String toString() {
-      return "User{" +
-              "id=" + id +
-              ", firstName='" + firstName + '\'' +
-              ", lastName='" + lastName + '\'' +
-              ", email='" + email + '\'' +
-              '}';
+   public void enable(){
+      isEnabled = true;
+   }
+
+   public void disable(){
+      isEnabled = false;
    }
 
    @Override
@@ -99,32 +121,43 @@ public class User implements UserDetails {
    }
 
    @Override
-   public String getPassword() {
-      return password;
-   }
-
-   @Override
    public String getUsername() {
       return loginName;
    }
 
+   public void setAccountNonExpired(boolean accountNonExpired) {
+      isAccountNonExpired = accountNonExpired;
+   }
+
    @Override
    public boolean isAccountNonExpired() {
-      return true;
+      return isAccountNonExpired;
+   }
+
+   public void setAccountNonLocked(boolean accountNonLocked) {
+      isAccountNonLocked = accountNonLocked;
    }
 
    @Override
    public boolean isAccountNonLocked() {
-      return true;
+      return isAccountNonLocked;
+   }
+
+   public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+      isCredentialsNonExpired = credentialsNonExpired;
    }
 
    @Override
    public boolean isCredentialsNonExpired() {
-      return true;
+      return isCredentialsNonExpired;
    }
 
    @Override
    public boolean isEnabled() {
-      return true;
+      return isEnabled;
+   }
+
+   public void setEnabled(boolean enabled) {
+      isEnabled = enabled;
    }
 }

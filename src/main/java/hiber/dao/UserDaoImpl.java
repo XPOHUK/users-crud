@@ -9,7 +9,7 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class UserDaoImp implements UserDao {
+public class UserDaoImpl implements UserDao {
 
    @PersistenceContext
    private EntityManager entityManager;
@@ -21,7 +21,7 @@ public class UserDaoImp implements UserDao {
 
    @Override
    public List<User> listUsers() {
-      TypedQuery<User> query=entityManager.createQuery("select u from User u JOIN FETCH u.roles", User.class);
+      TypedQuery<User> query=entityManager.createQuery("select distinct u from User u LEFT JOIN FETCH u.roles roles", User.class);
       return query.getResultList();
    }
 
@@ -43,7 +43,11 @@ public class UserDaoImp implements UserDao {
    }
 
    public User getUserByLoginName(String login){
-      TypedQuery<User> query = entityManager.createQuery("select u from User u JOIN FETCH u.roles where u.loginName = :login ", User.class).setParameter("login", login);
-      return query.getSingleResult();
+      TypedQuery<User> query = entityManager.createQuery("select u from User u JOIN FETCH u.roles where u.loginName = :login ", User.class)
+              .setParameter("login", login);
+      List results = query.getResultList();
+      if (results.isEmpty())
+         return null;
+      return (User) results.get(0);
    }
 }

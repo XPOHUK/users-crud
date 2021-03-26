@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>Manage User Roles</title>
+</head>
+<body>
+<h2 th:text="'User: ' + ${user.getUsername()}">User: </h2>
+<br/>
+<p>
+<table style="float: left" border="1">
+    <thead>
+    <tr>
+        <th>User Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="role : ${user.roles}" th:object="${role}">
+        <td>
+            <form th:action="@{/admin/remove_role}" method="get">
+                <input type="hidden" name="user_id" th:value="${user.id}"/>
+                <button type="submit" th:text="*{role}" name="role" th:value="*{role}"></button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<table border="1" style="float: left">
+    <thead>
+    <tr>
+        <th>Available Roles</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="availableRole : ${availableRoles}" th:object="${availableRole}">
+        <td>
+            <form th:action="@{/admin/add_role}" method="get">
+                <input type="hidden" name="user_id" th:value="${user.id}"/>
+                <button type="submit" th:text="*{role}" name="role" th:value="*{role}"></button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</p>
+<br/>
+<p style="clear: both">
+    <br/>
+    <br/>
+<form th:action="@{/admin}" method="get">
+    <button type="submit" th:text="Back"></button>
+</form>
+</p>
+</body>
+</html>

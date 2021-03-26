@@ -94,7 +94,6 @@ public class WebConfig implements WebMvcConfigurer {
     public PlatformTransactionManager getTransactionManager() {
         JpaTransactionManager transactionManager = new JpaTransactionManager();
         transactionManager.setEntityManagerFactory(getEntityManagerFactory().getObject());
-
         return transactionManager;
     }
 
@@ -105,4 +104,5 @@ public class WebConfig implements WebMvcConfigurer {
         resolver.setCharacterEncoding("UTF-8");
         registry.viewResolver(resolver);
     }
+
 }

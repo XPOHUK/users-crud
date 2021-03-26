@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Users</title>
+</head>
+<body>
+<h2>Users</h2>
+<table border="1">
+    <thead>
+    <tr>
+        <th>Id</th>
+        <th>Login</th>
+        <th>First Name</th>
+        <th>Last Name</th>
+        <th>E-Mail</th>
+        <th>Role</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="user : ${users}">
+        <form action="#" th:action="@{/admin/modify}" th:object="${user}" method="post">
+            <td th:text="*{id}"></td>
+            <td th:text="*{loginName}"></td>
+            <td><input type="text" th:value="${user.firstName}" th:name="firstName" th:id="firstName"/></td>
+            <td><input type="text" th:value="${user.lastName}" th:name="lastName" th:id="lastName"/></td>
+            <td><input type="text" th:value="${user.email}" th:name="email" th:id="email"/></td>
+            <td><span th:each="userRole : ${user.roles}" th:text="${userRole.role} + ' '">[role]</span></td>
+            <td colspan="3">
+                <input type="hidden" name="id" id="id" th:value="${user.id}"/>
+                <button type="submit" name="submit" value="value" class="link-button">Update</button>
+            </td>
+        </form>
+        <td colspan="3">
+            <form th:action="@{/admin/delete}" th:object="${user}" method="post">
+                <input type="hidden" name="id" th:value="${user.id}"/>
+                <input type="hidden" name="firstName" th:value="${user.firstName}"/>
+                <input type="hidden" name="lastName" th:value="${user.lastName}"/>
+                <input type="hidden" name="email" th:value="${user.email}"/>
+                <button type="submit">Delete</button>
+            </form>
+        </td>
+        <td colspan="3">
+            <form th:action="@{/admin/manage_roles}" th:object="${user}" method="get">
+                <button type="submit" name="user_id" th:value="*{id}">Manage Roles</button>
+            </form>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<h2>Add New User</h2>
+<br/>
+<form action="#" th:action="@{/admin}" th:object="${user}" method="post">
+    <table>
+        <tr>
+            <td><label>Login Name</label></td>
+            <td>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('loginNameIsEmpty')}" th:text="${errorMap['loginNameIsEmpty']}"></p>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('userExists')}" th:text="${errorMap['userExists']}"></p>
+                <input type="text" th:field="*{loginName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Password</label></td>
+            <td>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('passwordIsEmpty')}" th:text="${errorMap['passwordIsEmpty']}"></p>
+                <input type="text" th:field="*{password}"/>
+            </td>
+        </tr>
+        <tr>
+
+            <td><label>First Name</label></td>
+            <td>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('firstNameIsEmpty')}" th:text="${errorMap['firstNameIsEmpty']}"></p>
+                <input type="text" th:field="*{firstName}"/>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Last Name</label></td>
+            <td>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('lastNameIsEmpty')}" th:text="${errorMap['lastNameIsEmpty']}"></p>
+                <input type="text" th:field="*{lastName}"/>
+            </td>
+
+        </tr>
+        <tr>
+            <td><label>Email</label></td>
+            <td>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('emailIsEmpty')}" th:text="${errorMap['emailIsEmpty']}"></p>
+                <p style="color:red" th:if="${errorMap != null && errorMap.containsKey('emailNotValid')}" th:text="${errorMap['emailNotValid']}"></p>
+                <input type="text" th:field="*{email}"/>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="3"><input type="submit" value="Add User"/></td>
+        </tr>
+    </table>
+</form>
+<br>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Logout">
+</form>
+</body>
+</html>
