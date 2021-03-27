@@ -25,13 +25,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
    @Override
    public void createUser(UserDto userDto) {
-      User user = new User(userDto);
-      user.setRoles(new HashSet<>(Arrays.asList(roleDao.getRoleByName("ROLE_USER"))));
-      user.enable();
-      user.setAccountNonExpired(true);
-      user.setAccountNonLocked(true);
-      user.setCredentialsNonExpired(true);
-      userDao.add(user);
+      if(validateUser(userDto).isEmpty()) {
+         User user = new User(userDto);
+         user.setRoles(new HashSet<>(Arrays.asList(roleDao.getRoleByName("ROLE_USER"))));
+         user.enable();
+         user.setAccountNonExpired(true);
+         user.setAccountNonLocked(true);
+         user.setCredentialsNonExpired(true);
+         userDao.add(user);
+      }
    }
 
    @Transactional(readOnly = true)

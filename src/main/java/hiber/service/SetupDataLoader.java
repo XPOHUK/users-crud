@@ -1,9 +1,8 @@
 package hiber.service;
 
 import hiber.dao.RoleDao;
-import hiber.dao.UserDao;
 import hiber.model.Role;
-import hiber.model.User;
+import hiber.model.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -18,7 +17,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
     private boolean alreadySetup = false;
 
     @Autowired
-    private UserDao userDao;
+    private UserService userService;
 
     @Autowired
     private RoleDao roleDao;
@@ -38,18 +37,14 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         createRoleIfNotFound("ROLE_USER");
 
         Role adminRole = roleDao.getRoleByName("ROLE_ADMIN");
-        User user = new User();
+        UserDto user = new UserDto();
         user.setFirstName("Admin");
         user.setLastName("Admin");
         user.setEmail("admin@admin.com");
         user.setLoginName("admin");
         user.setPassword("admin");
-        user.setCredentialsNonExpired(true);
-        user.setAccountNonLocked(true);
-        user.setAccountNonExpired(true);
         user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
-        user.enable();
-        userDao.add(user);
+        userService.createUser(user);
         alreadySetup = true;
     }
 
