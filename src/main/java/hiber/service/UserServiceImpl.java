@@ -6,8 +6,6 @@ import hiber.model.User;
 import hiber.model.UserDto;
 import hiber.util.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +13,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
    @Autowired
    private UserDao userDao;
@@ -55,11 +53,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
    @Override
    public User getUserById(long id){
       return userDao.getUserById(id);
-   }
-
-   @Override
-   public UserDetails loadUserByUsername(String s) {
-      return userDao.getUserByLoginName(s);
    }
 
    @Override

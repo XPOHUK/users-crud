@@ -6,12 +6,13 @@ import hiber.model.UserDto;
 import hiber.service.RoleService;
 import hiber.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,9 @@ import java.util.Map;
 public class UserController {
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private UserDetailsService userDetailsService;
 
 	@Autowired
 	private RoleService roleService;
@@ -62,7 +66,7 @@ public class UserController {
 	@GetMapping(value = "/admin/manage_roles")
 	public String manageRoles( Model model,
 							  @RequestParam(value = "user_id") String user_id){
-		User user = userService.getUserById(Long.valueOf(user_id));
+		User user = userService.getUserById(Long.parseLong(user_id));
 		model.addAttribute("user", user);
 		List<Role> availableRoles = roleService.getAllRoles();
 		availableRoles.removeAll(user.getRoles());
@@ -73,7 +77,7 @@ public class UserController {
 	@GetMapping(value = "/admin/add_role")
 	public String addRole(@RequestParam(value = "role") String role,
 						  @RequestParam(value = "user_id") String user_id){
-		User user = userService.getUserById(Long.valueOf(user_id));
+		User user = userService.getUserById(Long.parseLong(user_id));
 		user.getRoles().add(roleService.getRoleByName(role));
 		userService.updateUser(user);
 		return "redirect:/admin/manage_roles?user_id=" + user_id;
@@ -82,15 +86,15 @@ public class UserController {
 	@GetMapping(value = "/admin/remove_role")
 	public String removeRole(@RequestParam(value = "role") String role,
 						  @RequestParam(value = "user_id") String user_id){
-		User user = userService.getUserById(Long.valueOf(user_id));
+		User user = userService.getUserById(Long.parseLong(user_id));
 		user.getRoles().remove(user.getRoles().stream().filter(r -> r.getRole().equals(role)).findFirst().get());
 		userService.updateUser(user);
 		return "redirect:/admin/manage_roles?user_id=" + user_id;
 	}
 
 	@GetMapping(value = "/user")
-	public String printHello(Principal principal, ModelMap model) {
-		model.addAttribute("user", userService.loadUserByUsername(principal.getName()));
+	public String printHello(UsernamePasswordAuthenticationToken token, ModelMap model) {
+		model.addAttribute("user", userDetailsService.loadUserByUsername(token.getName()));
 		return "user";
 	}
 }

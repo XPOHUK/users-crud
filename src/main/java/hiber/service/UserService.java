@@ -13,6 +13,5 @@ public interface UserService {
     void removeUser(User user);
     void updateUser(User user);
     User getUserById(long id);
-    UserDetails loadUserByUsername(String s);
     Map<String, String> validateUser(UserDto user);
 }
