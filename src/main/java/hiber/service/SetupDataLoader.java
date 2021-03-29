@@ -6,6 +6,7 @@ import hiber.model.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,9 @@ import java.util.HashSet;
 @Component
 public class SetupDataLoader implements ApplicationListener<ContextRefreshedEvent> {
     private boolean alreadySetup = false;
+
+    @Autowired
+    BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
@@ -42,7 +46,7 @@ public class SetupDataLoader implements ApplicationListener<ContextRefreshedEven
         user.setLastName("Admin");
         user.setEmail("admin@admin.com");
         user.setLoginName("admin");
-        user.setPassword("admin");
+        user.setPassword(passwordEncoder.encode("admin"));
         user.setRoles(new HashSet<>(Arrays.asList(adminRole)));
         userService.createUser(user);
         alreadySetup = true;

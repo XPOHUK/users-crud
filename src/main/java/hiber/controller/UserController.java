@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -94,7 +95,9 @@ public class UserController {
 
 	@GetMapping(value = "/user")
 	public String printHello(UsernamePasswordAuthenticationToken token, ModelMap model) {
-		model.addAttribute("user", userDetailsService.loadUserByUsername(token.getName()));
+		User user1 = (User) token.getPrincipal();
+		model.addAttribute("user", user1); //userDetailsService.loadUserByUsername(token.getName()));
 		return "user";
 	}
+
 }
